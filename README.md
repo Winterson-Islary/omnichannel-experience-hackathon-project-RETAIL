@@ -1,4 +1,4 @@
-# multi-agent-system-for-Retail
+# multi-agent-system-for-Retail (Disclaimer: This repository is only for demo and does not reflect the end product)
 
 ## Hackathon Problem Statement: Challenge V: Retail – Fixing fragmented shopping experience
 
