@@ -2,7 +2,7 @@ import { HumanMessage } from "@langchain/core/messages";
 import { agent } from "./ai/state-graph";
 
 const result = await agent.invoke({
-    messages: [new HumanMessage("Can you tell me more about pro gadget?")],
+    messages: [new HumanMessage("Can you tell me more about claw hammer?")],
     userSource: "kiosk",
 });
 

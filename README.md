@@ -18,6 +18,12 @@
 bun install
 ```
 
+### Configure your LLM of choice inside
+
+```bash
+src/ai/model.ts
+```
+
 To run:
 
 ```bash
