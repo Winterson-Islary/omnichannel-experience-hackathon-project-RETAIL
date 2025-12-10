@@ -2,6 +2,7 @@ import type { InventoryItem } from "./types";
 
 export const MOCK_GLOBAL_WAREHOUSE: InventoryItem[] = [
     {
+        upid: "pro-gadget-002",
         id: "glo-002",
         sku: "GAD-PRO-002",
         name: "Pro Gadget",
@@ -13,6 +14,7 @@ export const MOCK_GLOBAL_WAREHOUSE: InventoryItem[] = [
         tags: ["gadget", "electronics"],
     },
     {
+        upid: "macbook-air-m1",
         id: "glo-999",
         sku: "EXCL-XYZ-999",
         name: "Macbook Air M1",
