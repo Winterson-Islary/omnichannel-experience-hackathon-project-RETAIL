@@ -2,6 +2,7 @@ import type { InventoryItem } from "./types";
 
 export const MOCK_STORE_INVENTORY: InventoryItem[] = [
     {
+        upid: "pro-gadget-002",
         id: "loc-002",
         sku: "GAD-PRO-002",
         name: "Pro Gadget",
@@ -13,6 +14,7 @@ export const MOCK_STORE_INVENTORY: InventoryItem[] = [
         tags: ["gadget", "electronics"],
     },
     {
+        upid: "claw-hammer-160z",
         id: "loc-003",
         sku: "TOOL-HAM-003",
         name: "Claw Hammer",
@@ -54,6 +56,7 @@ export const MOCK_STORE_SECONDARY_INVENTORY: StoreSecondaryInventory[] = [
                 distanceKm: 4.2,
                 items: [
                     {
+                        upid: "claw-hammer-16oz",
                         id: "wh101-001",
                         sku: "TOOL-HAM-003",
                         name: "Claw Hammer",
@@ -65,6 +68,7 @@ export const MOCK_STORE_SECONDARY_INVENTORY: StoreSecondaryInventory[] = [
                         tags: ["tools", "hardware"],
                     },
                     {
+                        upid: "pro-gadget-002",
                         id: "wh101-002",
                         sku: "GAD-PRO-002",
                         name: "Pro Gadget",
@@ -84,6 +88,7 @@ export const MOCK_STORE_SECONDARY_INVENTORY: StoreSecondaryInventory[] = [
                 distanceKm: 15.6,
                 items: [
                     {
+                        upid: "blu-headphone-01",
                         id: "wh102-001",
                         sku: "ELEC-WIRE-100",
                         name: "Wireless Headphones",
@@ -102,6 +107,7 @@ export const MOCK_STORE_SECONDARY_INVENTORY: StoreSecondaryInventory[] = [
                 distanceKm: 49.8,
                 items: [
                     {
+                        upid: "blue-jeans-01",
                         id: "wh103-001",
                         sku: "CLOTH-BLUJEAN-101",
                         name: "Blue Jeans",
@@ -127,6 +133,7 @@ export const MOCK_STORE_SECONDARY_INVENTORY: StoreSecondaryInventory[] = [
                 distanceKm: 7.1,
                 items: [
                     {
+                        upid: "pro-gadget-002",
                         id: "wh104-001",
                         sku: "GAD-PRO-002",
                         name: "Pro Gadget",
