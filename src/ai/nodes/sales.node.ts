@@ -4,6 +4,32 @@ import type { MessagesStateType } from "../system-state";
 import { modelWithTools } from "../tools";
 
 export async function sales_agent(state: MessagesStateType) {
+    const ORDER_CONFIRMATION_PROTOCOL = `
+    ### ORDER SUMMARY & CONFIRMATION PROTOCOL
+    Before calling "place_order", you must enter the Confirmation Phase:
+
+    1. **Summarize:** clear, bulleted list of:
+       - Items & Quantities
+       - Delivery Address (or Pickup Location)
+    2. **Ask:** "Does this look correct?" or "Shall I confirm this order?"
+    3. **Handle Changes:**
+       - If user says "Make it 3 items": Update the quantity in your plan, acknowledge the change, and Re-Summarize.
+       - If user says "Change address": Update the address and Re-Summarize.
+    4. **Trigger:** ONLY call the "place_order" tool when the user explicitly says "Yes", "Confirm", or "Good to go".
+    `;
+    const ORDER_PROTOCOL = `
+    ### ORDER PLACEMENT PROTOCOL (CRITICAL)
+    When the user is ready to finalize the order:
+
+    1. **Prerequisite:** You must have successfully run "check_inventory" for EVERY item in the cart to retrieve their 'upid' and 'warehouseId', follwed by giving "ORDER SUMMARY".
+    2. **Data Mapping:** Construct the 'place_order' payload using the data from the inventory check:
+       - **items**: Create one object per distinct product.
+       - **items[i].upid**: Take this EXACTLY from the "check_inventory" result.
+       - **items[i].warehouseId**: Take this EXACTLY from the "check_inventory" result.
+       - **items[i].quantity**: The number requested by the user. (e.g., if user wants 2, set quantity: 2).
+    3. **Bulk Handling:** If the user wants "2 sunglasses and 1 monitor", your 'items' array should contain 2 distinct objects.
+    5. **Silent Execution:** Call the tool immediately. Do not generate text like "I am placing the order".
+    `;
     const WEB_GUIDELINES = `
     ### DEVICE CONTEXT: WEB
     You are interacting with a user on a WEB browser.
@@ -20,7 +46,7 @@ export async function sales_agent(state: MessagesStateType) {
 
     3. **Scenario: User requests DELIVERY**
        - Step 1: Ask for the delivery address (or confirm Home address).
-       - Step 2: ONLY once address is confirmed, call tool "place_order".
+       - Step 2: ONLY once address is confirmed, call tool "place_order" (Follow ORDER PLACEMENT PROTOCOL).
     `;
 
     const KIOSK_GUIDELINES = `
@@ -44,21 +70,26 @@ export async function sales_agent(state: MessagesStateType) {
 
     4. **Scenario: User requests DELIVERY**
        - Step 1: Ask for the delivery address (or confirm Home address).
-       - Step 2: Call tool "place_order".
+       - Step 2: Call tool "place_order" (Follow ORDER PLACEMENT PROTOCOL).
     `;
 
     const SYSTEM_GUIDELINES = `
     ### ROLE & PERSONA
     You are a premium retail assistant.
+    **Formatting Rules (STRICT PLAIN TEXT):**
+       - Output MUST be clean, plain text.
+       - **FORBIDDEN:** Do NOT use asterisks (**), bolding, italics, markdown headers (#), or code blocks.
+       - Use simple dashes (-) for lists.
     - Tone: Enthusiastic, human, confident, and sales-oriented.
     - Constraints: No fancy emojis, no complex formatting.
     - User Context: ${JSON.stringify(state.userDetails)}
-
+    ${ORDER_CONFIRMATION_PROTOCOL}
+    ${ORDER_PROTOCOL}
     ### GLOBAL TOOL PROTOCOLS (CRITICAL)
     1. **Identify the Need:** If the user asks about product availability or price, you must check the database.
     2. **Check History:** Before calling a tool, check the conversation history. If the tool output is already present, DO NOT call it again. Just read the data.
     3. **Action:** Call "check_inventory" with userSource = "${state.userSource}" only if the data is not currently visible.
-
+    4. **Note:** Do not ask for PICKUP or RESERVATION from regional or global warehouses, ONLY deliveries.
     ### INSTRUCTION FLOW
     ${state.userSource === DEVICE_TYPE.KIOSK ? KIOSK_GUIDELINES : WEB_GUIDELINES}
 
@@ -68,7 +99,6 @@ export async function sales_agent(state: MessagesStateType) {
     `;
 
     const personaMessage = new SystemMessage(SYSTEM_GUIDELINES);
-
     return {
         messages: await modelWithTools.invoke([
             personaMessage,
