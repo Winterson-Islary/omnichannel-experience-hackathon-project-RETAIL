@@ -7,7 +7,7 @@ const GROQ_MODEL_IDS = {
 } as const;
 const MODELS = {
     groq_model: new ChatOpenAI({
-        model: GROQ_MODEL_IDS.LLAMA_70B_VERSATILE, // or mixtral-8x7b, llama3-70b, etc.
+        model: GROQ_MODEL_IDS.GPT_OSS_120B, // or mixtral-8x7b, llama3-70b, etc.
         apiKey: process.env.GROQ_API_KEY,
         configuration: {
             baseURL: "https://api.groq.com/openai/v1",
