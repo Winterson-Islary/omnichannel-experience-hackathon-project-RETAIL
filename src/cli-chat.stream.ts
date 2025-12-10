@@ -25,7 +25,7 @@ export async function chat_stream() {
         state.messages.push(new HumanMessage(input));
         const stream = await agent.stream(state, { streamMode: "values" });
         let streamedContent = "";
-        console.log("Assistant:\t");
+        console.log("Assistant:_________________\t");
         process.stdout.write("");
         for await (const chunk of stream) {
             const lastMessage = chunk.messages?.at(-1);
@@ -39,11 +39,12 @@ export async function chat_stream() {
             }
             if (chunk.messages) state.messages = chunk.messages;
         }
-        console.log("\n");
+        console.log("\n_________________\n");
         await loop();
     }
     async function loop() {
-        readline.question("You: \t", async (input) => {
+        readline.question("You:\t", async (input) => {
+            console.log("\n");
             if (input.toLowerCase() === "exit") {
                 console.log("Ending chat...");
                 readline.close();
