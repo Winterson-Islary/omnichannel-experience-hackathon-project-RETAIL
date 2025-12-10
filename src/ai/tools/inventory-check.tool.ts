@@ -10,9 +10,7 @@ import { z } from "zod";
 export const checkPrimaryInventoryTool = tool(
     async ({ itemName, userSource }) => {
         const source =
-            userSource === "kiosk"
-                ? MOCK_STORE_INVENTORY
-                : MOCK_GLOBAL_WAREHOUSE;
+            userSource === "web" ? MOCK_GLOBAL_WAREHOUSE : MOCK_STORE_INVENTORY;
         const normalizedItemName = itemName.toLowerCase();
         const result = source.find((item) =>
             item.name.toLowerCase().includes(normalizedItemName),
@@ -90,6 +88,39 @@ export const checkSecondaryInventoryTool = tool(
                 .describe(
                     "The id of the store from which customer is making the request",
                 ),
+        }),
+    },
+);
+
+export const checkFallbackInventoryTool = tool(
+    async ({ itemName, userSource }) => {
+        const normalizedItemName = itemName.toLowerCase();
+        const inventory = MOCK_GLOBAL_WAREHOUSE;
+        const hasItemDetails = inventory.find((item) =>
+            item.name.toLowerCase().includes(normalizedItemName),
+        );
+        if (!hasItemDetails)
+            return JSON.stringify({
+                status: "not_found",
+                source: userSource,
+                message: `Item ${itemName} is currently unavailable`,
+            });
+        return JSON.stringify({
+            status: "success",
+            source: userSource,
+            data: hasItemDetails,
+        });
+    },
+    {
+        name: "check_fallback_inventory",
+        description:
+            "Search regional or national inventory in case local warehouses are out of item/items",
+        schema: z.object({
+            itemName: z.string().describe("The name of the product to check"),
+            userSource: z
+                .enum(["kiosk", "web"])
+                .describe("The type of device the request is from")
+                .describe("Requests from WEB devices should not reach here"),
         }),
     },
 );

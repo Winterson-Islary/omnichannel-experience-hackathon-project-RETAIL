@@ -1,11 +1,5 @@
-import { HumanMessage } from "@langchain/core/messages";
-import { agent } from "./ai/state-graph";
+import { chat_stream } from "./cli-chat.stream";
 
-const result = await agent.invoke({
-    messages: [new HumanMessage("Can you tell me more about claw hammer?")],
-    userSource: "kiosk",
-});
+export const DEVICE_TYPE = { KIOSK: "kiosk", WEB: "web" } as const;
 
-for (const message of result.messages) {
-    console.log(`[${message.getType()}]: ${message.text}`);
-}
+await chat_stream().catch(console.error);
