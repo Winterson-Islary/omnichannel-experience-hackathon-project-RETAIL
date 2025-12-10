@@ -1,4 +1,5 @@
 export interface InventoryItem {
+    upid: string; // Universal Product Identification Code
     id: string;
     sku: string;
     name: string;
